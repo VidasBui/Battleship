@@ -1,0 +1,3 @@
+server/dist
+client/battleship/node_modules
+server/node_modules

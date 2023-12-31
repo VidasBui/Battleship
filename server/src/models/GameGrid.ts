@@ -7,12 +7,19 @@ type Tile = {
   wasShot: boolean;
 };
 
+type protectedTile = {
+  coordinates: TileKey;
+  wasShot: boolean;
+  hit: boolean;
+  destroyed: boolean;
+};
+
 export type TileKey = { x: number; y: number };
 
 class GameGrid {
   private _grid: Record<string, any> = {};
 
-  constructor(public size = 10) {
+  constructor(public remainingShips = 0, public size = 10) {
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
         const key: TileKey = { x: i, y: j };
@@ -36,6 +43,43 @@ class GameGrid {
     this._grid[keyString] = value;
   }
 
+  getUserGrid(): protectedTile[] {
+    let tiles: protectedTile[] = [];
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.size; j++) {
+        const key: TileKey = { x: i, y: j };
+        const tile = this.getProtectedTile(key);
+        if (tile) tiles.push(tile);
+      }
+    }
+    return tiles;
+  }
+
+  private getProtectedTile(key: TileKey): protectedTile | undefined {
+    const tile = this.getTile(key);
+    if (!tile) return undefined;
+
+    const wasShot = tile.wasShot;
+    let hit = tile.ship && tile.wasShot ? true : false;
+    let destroyed = false;
+    if (tile.ship) {
+      destroyed = true;
+      for (const a of tile.ship.occupiedTiles) {
+        const shipTile = this.getTile(a);
+        if (shipTile?.wasShot == false) {
+          destroyed = false;
+          break;
+        }
+      }
+    }
+    return {
+      coordinates: key,
+      wasShot: wasShot,
+      hit: hit,
+      destroyed: destroyed,
+    };
+  }
+
   private placeShips() {
     for (const shipLength of getDefaultShipLengths()) {
       let placed = false;
@@ -49,6 +93,7 @@ class GameGrid {
         ) {
           this.placeShip(shipLength, startX, startY, isHorizontal, shipId);
           placed = true;
+          this.remainingShips++;
         }
       }
     }

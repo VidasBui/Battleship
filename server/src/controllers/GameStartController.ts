@@ -12,10 +12,18 @@ const GameStartController = (req: Request, res: Response): void => {
     expiresIn: "4h",
   });
 
-  var game = new Game(gameId);
+  const game = new Game(gameId);
   gameRepository.add(game);
 
-  res.json(token);
+  const grid = game.grid.getUserGrid();
+  const remainingShots = game.remainingShots;
+
+  res.json({
+    token,
+    grid,
+    remainingShots,
+    remainingShips: game.grid.remainingShips,
+  });
 };
 
 export default GameStartController;

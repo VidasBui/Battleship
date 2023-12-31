@@ -1,7 +1,7 @@
 import Ship from "./Ship";
 
 type Tile = {
-  shipId: Ship | undefined;
+  ship: Ship | undefined;
   wasShot: boolean;
 };
 
@@ -15,7 +15,7 @@ class GameGrid {
       for (let j = 0; j < 10; j++) {
         const key: TileKey = { x: i, y: j };
         const defaultTile: Tile = {
-          shipId: undefined,
+          ship: undefined,
           wasShot: false,
         };
         this.setTile(key, defaultTile);

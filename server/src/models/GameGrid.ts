@@ -7,7 +7,7 @@ type Tile = {
   wasShot: boolean;
 };
 
-type protectedTile = {
+export type protectedTile = {
   coordinates: TileKey;
   wasShot: boolean;
   hit: boolean;
@@ -78,6 +78,50 @@ class GameGrid {
       hit: hit,
       destroyed: destroyed,
     };
+  }
+
+  handleHit(coordinates: TileKey): {
+    updatedTiles: protectedTile[];
+    error?: string;
+    successfulShot: boolean;
+  } {
+    const tile = this.getTile(coordinates);
+    if (!tile || tile.wasShot)
+      return {
+        updatedTiles: [],
+        error: tile?.wasShot
+          ? "Tile was already shot before"
+          : "Invalid coordinates",
+        successfulShot: false,
+      };
+
+    tile.wasShot = true;
+    return this.checkShipState(coordinates);
+  }
+
+  private checkShipState(coordinates: TileKey): {
+    updatedTiles: protectedTile[];
+    successfulShot: boolean;
+  } {
+    const tile = this.getTile(coordinates);
+    if (!tile?.ship) {
+      const t = this.getProtectedTile(coordinates);
+      return { updatedTiles: t ? [t] : [], successfulShot: false };
+    } else {
+      const t = this.getProtectedTile(coordinates);
+      for (const key of tile.ship.occupiedTiles) {
+        if (!this.getTile(key)?.wasShot)
+          return { updatedTiles: t ? [t] : [], successfulShot: true };
+      }
+      //destroyed
+      let updatedTiles: protectedTile[] = [];
+      this.remainingShips--;
+      for (const key of tile.ship.occupiedTiles) {
+        const protectedTile = this.getProtectedTile(key);
+        if (protectedTile) updatedTiles.push(protectedTile);
+      }
+      return { updatedTiles: updatedTiles, successfulShot: true };
+    }
   }
 
   private placeShips() {

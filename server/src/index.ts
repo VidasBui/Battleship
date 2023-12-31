@@ -1,6 +1,8 @@
 import express from "express";
+import { v4 as uuid } from "uuid";
 import GameStartController from "./controllers/GameStartController";
 
+export const secretKey = process.env.JWT_SECRET_KEY || uuid();
 const port = 8000;
 
 const app = express();

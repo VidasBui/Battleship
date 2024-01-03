@@ -17,14 +17,12 @@ const GameStartController = (req: Request, res: Response): void => {
 
   const grid = game.grid.getUserGrid();
   const remainingShots = game.remainingShots;
+  const gridSize = game.grid.size;
+  const remainingShips = game.grid.remainingShips;
 
   res.header("Authorization", `Bearer ${token}`);
 
-  res.json({
-    grid,
-    remainingShots,
-    remainingShips: game.grid.remainingShips,
-  });
+  res.json({ grid, remainingShots, gridSize, remainingShips });
 };
 
 export default GameStartController;

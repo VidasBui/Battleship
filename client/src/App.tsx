@@ -1,7 +1,6 @@
-import { Typography } from "@mui/material";
-
+import BattleShipGame from "./pages/BattleshipGame";
 function App() {
-  return <Typography>Battleship</Typography>;
+  return <BattleShipGame />;
 }
 
 export default App;

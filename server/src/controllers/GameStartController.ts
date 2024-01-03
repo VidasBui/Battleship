@@ -18,8 +18,9 @@ const GameStartController = (req: Request, res: Response): void => {
   const grid = game.grid.getUserGrid();
   const remainingShots = game.remainingShots;
 
+  res.header("Authorization", `Bearer ${token}`);
+
   res.json({
-    token,
     grid,
     remainingShots,
     remainingShips: game.grid.remainingShips,

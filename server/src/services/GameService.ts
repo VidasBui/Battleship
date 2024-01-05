@@ -72,10 +72,6 @@ class GameService {
     this._gameRepository.add(game);
   }
 
-  private getAllGames(): Game[] {
-    return this._gameRepository.getAll();
-  }
-
   private getGameById(gameId: string): Game | undefined {
     return this._gameRepository.get(gameId);
   }

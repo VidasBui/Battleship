@@ -11,10 +11,6 @@ class GameRepository {
     this._games.push(game);
   }
 
-  getAll(): Game[] {
-    return this._games;
-  }
-
   get(gameId: string): Game | undefined {
     return this._games.find((game) => game.gameId === gameId);
   }

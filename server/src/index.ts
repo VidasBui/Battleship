@@ -1,8 +1,7 @@
 import cors from "cors";
 import express from "express";
 import { v4 as uuid } from "uuid";
-import GameStartController from "./controllers/GameStartController";
-import shootController from "./controllers/shootController";
+import GameController from "./controllers/GameController";
 
 export const secretKey = process.env.JWT_SECRET_KEY || uuid();
 const port = 8000;
@@ -20,8 +19,10 @@ app.use(
 
 app.use(express.json());
 
-app.get("/api/startGame", GameStartController);
-app.post("/api/shoot", shootController);
+const gameController = new GameController();
+
+app.get("/api/startGame", gameController.startGame);
+app.post("/api/shoot", gameController.shoot);
 
 app.get("/api", (req, res) => {
   res.send("Battleship game");

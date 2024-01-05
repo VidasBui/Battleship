@@ -1,25 +1,27 @@
 import Game from "../models/Game";
 
 class GameRepository {
-  private games: Game[] = [];
+  private _games: Game[];
+
+  constructor() {
+    this._games = [];
+  }
 
   add(game: Game) {
-    this.games.push(game);
+    this._games.push(game);
   }
 
   getAll(): Game[] {
-    return this.games;
+    return this._games;
   }
 
   get(gameId: string): Game | undefined {
-    return this.games.find((game) => game.gameId === gameId);
+    return this._games.find((game) => game.gameId === gameId);
   }
 
   delete(gameId: string) {
-    this.games = this.games.filter((game) => game.gameId !== gameId);
+    this._games = this._games.filter((game) => game.gameId !== gameId);
   }
 }
 
-const gameRepository = new GameRepository();
-
-export default gameRepository;
+export default GameRepository;

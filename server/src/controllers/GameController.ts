@@ -19,6 +19,28 @@ class GameController {
     }
   }
 
+  async restart(req: Request, res: Response) {
+    try {
+      const {
+        status,
+        errMessage,
+        gameId: previousGameId,
+      } = authService.validateToken(req);
+      if (!previousGameId)
+        return res.status(status).json({ message: `${errMessage}` });
+
+      const { gameId, grid, gridSize, remainingShips, remainingShots } =
+        gameService.restartGame(previousGameId);
+
+      const token = authService.getToken(gameId);
+
+      res.header("Authorization", `Bearer ${token}`);
+      res.status(200).json({ grid, remainingShots, gridSize, remainingShips });
+    } catch (e: any) {
+      return res.status(500).json({ errorMessage: e.message });
+    }
+  }
+
   async shoot(req: Request, res: Response) {
     try {
       const schema = Joi.object({

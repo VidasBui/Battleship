@@ -1,6 +1,4 @@
-import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
-import { secretKey } from "../index";
 import Game from "../models/Game";
 import { protectedTile, TileKey } from "../models/GameGrid";
 import GameRepository from "../repositories/GameRepository";
@@ -15,10 +13,6 @@ class GameService {
   startNewGame() {
     const gameId: string = uuid();
 
-    const token: string = jwt.sign({ gameId }, secretKey, {
-      expiresIn: "4h",
-    });
-
     const game = new Game(gameId);
     this.addGame(game);
     const grid = game.grid.getUserGrid();
@@ -26,7 +20,12 @@ class GameService {
     const gridSize = game.grid.size;
     const remainingShips = game.grid.remainingShips;
 
-    return { token, grid, remainingShots, gridSize, remainingShips };
+    return { gameId, grid, remainingShots, gridSize, remainingShips };
+  }
+
+  restartGame(previousGameId: string) {
+    this.deleteGameById(previousGameId);
+    return this.startNewGame();
   }
 
   handleShot(

@@ -23,6 +23,7 @@ const gameController = new GameController();
 
 app.get("/api/startGame", gameController.startGame);
 app.post("/api/shoot", gameController.shoot);
+app.get("/api/restartGame", gameController.restart);
 
 app.get("/api", (req, res) => {
   res.send("Battleship game");

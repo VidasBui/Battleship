@@ -1,7 +1,7 @@
 import ApiClient from "../ApiClient";
 import { startGameEndpoint } from "./EndpointConstants";
 
-type Response = {
+export type GameData = {
   grid: ProtectedTile[];
   remainingShots: number;
   remainingShips: number;
@@ -19,7 +19,7 @@ type TileKey = { x: number; y: number };
 
 const StartGame = async () => {
   try {
-    const res = await ApiClient.get<Response>(`${startGameEndpoint}`);
+    const res = await ApiClient.get<GameData>(`${startGameEndpoint}`);
     if (res.status === 200) {
       const token = res.headers["authorization"];
       sessionStorage.setItem("accessToken", token);

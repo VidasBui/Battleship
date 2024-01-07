@@ -1,8 +1,13 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
+import EndGameModal from "../components/EndGameModal";
 import GameGrid from "../components/GameGrid";
 import { ShootResponse } from "../services/endpoints/Shoot";
-import StartGame, { ProtectedTile } from "../services/endpoints/StartGame";
+import StartGame, {
+  GameData,
+  ProtectedTile,
+} from "../services/endpoints/StartGame";
+import RestartGame from "../services/endpoints/StartGame";
 import "./BattleshipGame-module.scss";
 
 const BattleShipGame = () => {
@@ -13,20 +18,35 @@ const BattleShipGame = () => {
   const [error, setError] = useState<string>();
   const [endMessage, setEndMessage] = useState<string>();
   const [gridSize, setGridSize] = useState(0);
+  const [openModal, setModalOpen] = useState(false);
 
   const handleStartGame = () => {
     StartGame().then((res) => {
       if (res) {
-        setEndMessage(undefined);
-        setGameStarted(true);
-        setGrid(res.grid);
-        setRemainingShips(res.remainingShips);
-        setRemainingShots(res.remainingShots);
-        setGridSize(res.gridSize);
+        setGameValues(res);
       } else {
         setError("Failed to connect to the server");
       }
     });
+  };
+
+  const handleRestartGame = () => {
+    RestartGame().then((res) => {
+      if (res) {
+        setGameValues(res);
+      } else {
+        setError("Failed to connect to the server");
+      }
+    });
+  };
+
+  const setGameValues = (res: GameData) => {
+    setEndMessage(undefined);
+    setGameStarted(true);
+    setGrid(res.grid);
+    setRemainingShips(res.remainingShips);
+    setRemainingShots(res.remainingShots);
+    setGridSize(res.gridSize);
   };
 
   const updateTiles = (tiles: ProtectedTile[]) => {
@@ -58,21 +78,24 @@ const BattleShipGame = () => {
       setRemainingShips(res.remainingShips);
       setRemainingShots(res.remainingShots);
       setEndMessage(res.endMessage);
+      if (res.endMessage) setModalOpen(true);
     }
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
   };
 
   return (
     <Box id="mainBox" className="mainBox">
-      <Typography variant="h2" sx={{ ml: 1 }}>
-        Batteship
-      </Typography>
+      <Typography variant="h2">Batteship</Typography>
       {gameStarted && (
         <>
-          <Box className="spaceEvenlyBox">
+          <Box className="centeredBox">
             <Typography className="message">
               remaining shots: {remainingShots}
             </Typography>
-            <Typography className="message">
+            <Typography sx={{ ml: "15px" }} className="message">
               remaining ships:{remainingShips}
             </Typography>
           </Box>
@@ -85,16 +108,20 @@ const BattleShipGame = () => {
         </>
       )}
       {error && <Typography sx={{ color: "red" }}>{error}</Typography>}
-      {endMessage && (
-        <Typography variant="h4" className="message" sx={{ mt: 2 }}>
-          {endMessage}
-        </Typography>
-      )}
-      {(!gameStarted || endMessage) && (
-        <Button onClick={handleStartGame} className="gameStartButton">
-          {!gameStarted ? "Start Game" : "Play Again"}
-        </Button>
-      )}
+      <Button
+        onClick={
+          !endMessage && gameStarted ? handleRestartGame : handleStartGame
+        }
+        className="gameStartButton"
+      >
+        {endMessage ? "Restart" : gameStarted ? "Play again" : "Start game"}
+      </Button>
+      <EndGameModal
+        open={openModal}
+        onRestart={handleRestartGame}
+        onClose={handleClose}
+        message={endMessage}
+      />
     </Box>
   );
 };

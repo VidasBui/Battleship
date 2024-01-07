@@ -48,7 +48,7 @@ const GameGrid = ({
   return (
     <>
       <GridHeader length={gridSize} />
-      <Stack direction="column" spacing={0.5}>
+      <Stack direction="column" spacing={0.5} sx={{ mr: 4 }}>
         {Array.from({ length: gridSize }, (_, rowIndex) => (
           <Stack
             key={`row-${rowIndex}`}

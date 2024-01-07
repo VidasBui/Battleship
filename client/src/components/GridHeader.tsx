@@ -12,7 +12,7 @@ const GridHeader = ({ length }: Props) => {
   };
 
   return (
-    <Stack direction="row" spacing={0.5} justifyContent="center">
+    <Stack direction="row" spacing={0.5} justifyContent="center" sx={{ mr: 4 }}>
       <Cell key={`header`} />
       {Array.from({ length: length }, (_, colIndex) => (
         <Cell

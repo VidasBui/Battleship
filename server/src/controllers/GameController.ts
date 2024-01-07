@@ -25,7 +25,7 @@ class GameController {
         status,
         errMessage,
         gameId: previousGameId,
-      } = authService.validateToken(req);
+      } = await authService.validateToken(req);
       if (!previousGameId)
         return res.status(status).json({ message: `${errMessage}` });
 
@@ -53,7 +53,9 @@ class GameController {
         return res.status(400).json({ message: "Bad request" });
       }
 
-      const { status, errMessage, gameId } = authService.validateToken(req);
+      const { status, errMessage, gameId } = await authService.validateToken(
+        req
+      );
 
       if (!gameId) return res.status(status).json({ message: `${errMessage}` });
 

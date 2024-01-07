@@ -11,24 +11,23 @@ export class AuthService {
     });
   }
 
-  validateToken(req: Request): {
+  async validateToken(req: Request): Promise<{
     status: number;
     errMessage?: string;
     gameId?: string;
-  } {
-    const token = req.header("Authorization")?.split(" ")[1];
-    if (!token) {
-      return { status: 401, errMessage: "Unauthorized" };
-    }
-
-    jwt.verify(token, secretKey, (err: any, decoded: any) => {
-      if (err) {
-        return { status: 403, errMessage: "Forbidden" };
+  }> {
+    try {
+      const token = req.header("Authorization")?.split(" ")[1];
+      if (!token) {
+        return { status: 401, errMessage: "Unauthorized" };
       }
-      const gameId: string = decoded.gameId;
+      const decoded = await jwt.verify(token, secretKey);
+      const gameId: string = (decoded as any).gameId;
+
       return { status: 200, gameId: gameId };
-    });
-    return { status: 400, errMessage: "Bad request" };
+    } catch (err) {
+      return { status: 403, errMessage: "Forbidden" };
+    }
   }
 }
 

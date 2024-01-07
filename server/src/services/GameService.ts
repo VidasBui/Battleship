@@ -63,7 +63,7 @@ class GameService {
     if (game.grid.remainingShips == 0)
       return { ended: true, message: "Victory!" };
 
-    if (game.remainingShots == 0) return { ended: true, message: "Game over" };
+    if (game.remainingShots == 0) return { ended: true, message: "Game over!" };
     return { ended: false };
   }
 

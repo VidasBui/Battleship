@@ -41,6 +41,7 @@ const BattleShipGame = () => {
   };
 
   const setGameValues = (res: GameData) => {
+    setError(undefined);
     setEndMessage(undefined);
     setGameStarted(true);
     setGrid(res.grid);
@@ -74,6 +75,7 @@ const BattleShipGame = () => {
     if (typeof res === "undefined") {
       setError("Failed to connect to the server");
     } else {
+      setError(undefined);
       updateTiles(res.updatedTiles);
       setRemainingShips(res.remainingShips);
       setRemainingShots(res.remainingShots);

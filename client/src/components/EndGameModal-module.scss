@@ -1,0 +1,29 @@
+@import "../theme/theme.scss";
+
+.message {
+  font-weight: bold;
+  margin-top: 5;
+  margin-bottom: 5;
+}
+
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: $div-color;
+  padding: 20px;
+  min-width: 300px;
+  text-align: center;
+}
+
+#modalBox .closeButton {
+  background-color: $secondary-color;
+  color: $primary-color;
+  border-color: $primary-color;
+}
+
+#modalBox .restartButton {
+  background-color: $primary-color;
+  color: white;
+}

@@ -48,6 +48,10 @@ Ships are placed on a 10 x 10 board:
   3. Change current dirrectory to server with command: `cd server`.
   4. Run `npm i` to install packages (if you have not done already).
   5. Launch tests with command  `npm test`.
+     
+## Game screenshots:
+![image](https://github.com/VidasBui/Battleship/assets/107630990/f4559ad6-aaa1-40aa-96a8-404db84ffdd6)
+![image](https://github.com/VidasBui/Battleship/assets/107630990/faddc3b0-374e-4eeb-85fe-e5405b4f54c6)
 
 ## Additional notes:
 
